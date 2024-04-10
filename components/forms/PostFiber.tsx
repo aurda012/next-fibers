@@ -3,8 +3,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Image from "next/image";
-import { ChangeEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,23 +15,9 @@ import {
 } from "@/components/ui/form";
 
 import { Textarea } from "../ui/textarea";
-import { useUploadThing } from "@/lib/uploadthing";
 
-// import { updateUser } from "@/lib/actions/user.actions";
 import { FiberValidation } from "@/lib/validations/fiber";
 import { createFiber } from "@/lib/actions/fiber.actions";
-
-interface Props {
-  user: {
-    id: string;
-    objectId: string;
-    username: string;
-    name: string;
-    bio: string;
-    image: string;
-  };
-  btnTitle: string;
-}
 
 const PostFiber = ({ userId }: { userId: string }) => {
   const pathname = usePathname();
