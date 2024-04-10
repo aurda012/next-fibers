@@ -1,10 +1,11 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { useOrganization } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
+
 import {
   Form,
   FormControl,
@@ -13,17 +14,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { Textarea } from "../ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 import { FiberValidation } from "@/lib/validations/fiber";
 import { createFiber } from "@/lib/actions/fiber.actions";
 
-const PostFiber = ({ userId }: { userId: string }) => {
-  const pathname = usePathname();
-  const router = useRouter();
+interface Props {
+  userId: string;
+}
 
-  const form = useForm({
+function PostFiber({ userId }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const { organization } = useOrganization();
+
+  console.log(organization);
+
+  const form = useForm<z.infer<typeof FiberValidation>>({
     resolver: zodResolver(FiberValidation),
     defaultValues: {
       fiber: "",
@@ -32,10 +41,11 @@ const PostFiber = ({ userId }: { userId: string }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof FiberValidation>) => {
+    console.log(organization?.id);
     await createFiber({
       text: values.fiber,
       author: userId,
-      communityId: null,
+      communityId: organization ? organization.id : null,
       path: pathname,
     });
 
@@ -65,11 +75,11 @@ const PostFiber = ({ userId }: { userId: string }) => {
         />
 
         <Button type="submit" className="bg-primary-500">
-          Post Fiber
+          Post Thread
         </Button>
       </form>
     </Form>
   );
-};
+}
 
 export default PostFiber;
