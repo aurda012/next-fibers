@@ -10,6 +10,7 @@ import { headers } from "next/headers";
 import { IncomingHttpHeaders } from "http";
 
 import { NextResponse } from "next/server";
+
 import {
   addMemberToCommunity,
   createCommunity,
@@ -46,7 +47,7 @@ export const POST = async (request: Request) => {
 
   // Activitate Webhook in the Clerk Dashboard.
   // After adding the endpoint, you'll see the secret on the right side.
-  const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOK_SECRET || "");
+  const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOKS_SECRET || "");
 
   let evnt: Event | null = null;
 
@@ -69,6 +70,7 @@ export const POST = async (request: Request) => {
       evnt?.data ?? {};
 
     try {
+      console.log("Webhooks Create Community");
       // @ts-ignore
       await createCommunity(
         // @ts-ignore
@@ -162,6 +164,8 @@ export const POST = async (request: Request) => {
   // Listen organization updation event
   if (eventType === "organization.updated") {
     try {
+      console.log("Webhooks Update Community");
+
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/UpdateOrganization
       // Show what evnt?.data sends from above resource
       const { id, logo_url, name, slug } = evnt?.data;
@@ -184,6 +188,7 @@ export const POST = async (request: Request) => {
   // Listen organization deletion event
   if (eventType === "organization.deleted") {
     try {
+      console.log("Webhooks Delete Community");
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/DeleteOrganization
       // Show what evnt?.data sends from above resource
       const { id } = evnt?.data;
