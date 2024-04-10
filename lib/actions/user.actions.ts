@@ -43,16 +43,6 @@ export async function updateUser({
       { upsert: true }
     );
 
-    // // Update in Clerk
-    // await fetch(`${clerkApiUrl}/users/${userId}`, {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: `Bearer ${process.env.CLEARK_SECRET_KEY}`,
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    //   body: image, // body data type must match "Content-Type" header
-    // });
-
     if (path === "/profile/edit") {
       revalidatePath(path);
     }
