@@ -7,6 +7,8 @@ import { connectToDB } from "../mongoose";
 import Fiber from "../models/fiber.model";
 import Community from "../models/community.model";
 
+const clerkApiUrl = "https://api.clerk.dev/v1";
+
 interface Params {
   userId: string;
   username: string;
@@ -27,6 +29,7 @@ export async function updateUser({
   connectToDB();
 
   try {
+    // Update in Database
     await User.findOneAndUpdate(
       { id: userId },
       {
@@ -39,6 +42,16 @@ export async function updateUser({
       },
       { upsert: true }
     );
+
+    // // Update in Clerk
+    // await fetch(`${clerkApiUrl}/users/${userId}`, {
+    //   method: "POST",
+    //   headers: {
+    //     Authorization: `Bearer ${process.env.CLEARK_SECRET_KEY}`,
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   body: image, // body data type must match "Content-Type" header
+    // });
 
     if (path === "/profile/edit") {
       revalidatePath(path);
