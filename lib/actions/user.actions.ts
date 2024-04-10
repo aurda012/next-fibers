@@ -154,3 +154,32 @@ export async function fetchUsers({
     throw error;
   }
 }
+
+export async function getActivity(userId: string) {
+  try {
+    connectToDB();
+
+    // Find all threads created by the user
+    const userFibers = await Fiber.find({ author: userId });
+
+    // Collect all the child thread ids (replies) from the 'children' field of each user thread
+    const childFiberIds = userFibers.reduce((acc, userFiber) => {
+      return acc.concat(userFiber.children);
+    }, []);
+
+    // Find and return the child threads (replies) excluding the ones created by the same user
+    const replies = await Fiber.find({
+      _id: { $in: childFiberIds },
+      author: { $ne: userId }, // Exclude threads authored by the same user
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id",
+    });
+
+    return replies;
+  } catch (error) {
+    console.error("Error fetching replies: ", error);
+    throw error;
+  }
+}
