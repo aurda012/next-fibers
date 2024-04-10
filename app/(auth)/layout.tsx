@@ -17,7 +17,11 @@ export default function AuthLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.className} bg-dark-1`}>{children}</body>
+        <body className={`${inter.className} bg-dark-1`}>
+          <main className="mx-auto flex max-w-xl flex-col justify-start px-10 py-20">
+            {children}
+          </main>
+        </body>
       </html>
     </ClerkProvider>
   );
