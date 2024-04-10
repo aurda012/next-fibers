@@ -131,6 +131,10 @@ export async function fetchFibers(pageNumber = 1, pageSize = 20) {
       .limit(pageSize)
       .populate({ path: "author", model: User })
       .populate({
+        path: "community",
+        model: Community,
+      })
+      .populate({
         path: "children",
         populate: {
           path: "author",
