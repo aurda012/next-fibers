@@ -20,7 +20,7 @@ async function Home({
 
   const results = await fetchFibers(
     searchParams.page ? +searchParams.page : 1,
-    30
+    20
   );
 
   return (
